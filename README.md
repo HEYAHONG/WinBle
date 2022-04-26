@@ -61,3 +61,13 @@ if (descriptors.size() > 0)
     descriptor->clearIsSubscribeToNotification();
 }
 ```
+
+## 编译
+
+### Visual Studio
+
+直接打开WinBle.sln即可。
+
+### MSYS2 Mingw32/Mingw64
+
+使用CMake编译,需要使用最新版的MSYS2。由于MSYS2的gcc暂时不支持BLE(截至编辑时)，故从Windows10 SDK中复制了相应的库及头文件。

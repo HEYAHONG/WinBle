@@ -27,7 +27,7 @@ SOFTWARE.
 #define BLEGATTCHARACTERISTIC_H
 
 #include <Windows.h>
-#include <bluetoothleapis.h>
+#include "bluetoothleapis.h"
 
 #include "CallbackContext.h"
 #include "BleGattDescriptor.h"

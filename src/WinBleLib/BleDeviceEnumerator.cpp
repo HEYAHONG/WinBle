@@ -27,7 +27,7 @@ SOFTWARE.
 #include <bthdef.h>
 #include <devguid.h>
 #include <SetupAPI.h>
-#include <bluetoothleapis.h>
+#include "bluetoothleapis.h"
 
 #include "BleDeviceEnumerator.h"
 #include "BleException.h"

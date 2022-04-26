@@ -27,7 +27,7 @@ SOFTWARE.
 #define BLEGATTDESCRIPTOR_H
 
 #include <Windows.h>
-#include <bluetoothleapis.h>
+#include "bluetoothleapis.h"
 
 #include "BleDeviceContext.h"
 #include "BleGattDescriptorValue.h"

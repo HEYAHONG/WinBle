@@ -27,7 +27,7 @@ SOFTWARE.
 #define BLEGATTDESCRIPTORVALUE_H
 
 #include <Windows.h>
-#include <bluetoothleapis.h>
+#include "bluetoothleapis.h"
 
 using namespace std;
 

@@ -29,7 +29,8 @@ SOFTWARE.
 #include <Windows.h>
 #include <codecvt>
 #include <sstream>
-
+#include <string>
+#include <locale>
 string Utility::getLastErrorString(DWORD lastError)
 {
 
@@ -63,7 +64,7 @@ string Utility::guidToString(GUID uuid)
 string Utility::convertToString(const wstring& value)
 {
 	using convert_type = codecvt_utf8<wchar_t>;
-	wstring_convert<convert_type, wchar_t> converter;
+	std::wstring_convert<convert_type, wchar_t> converter;
 	return converter.to_bytes(value);
 }
 

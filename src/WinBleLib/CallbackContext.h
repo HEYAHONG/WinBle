@@ -29,7 +29,7 @@ SOFTWARE.
 #include <Windows.h>
 #include <mutex>
 
-#include <bluetoothleapis.h>
+#include "bluetoothleapis.h"
 #include "BleGattNotificationData.h"
 
 #include <functional>
