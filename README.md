@@ -61,6 +61,24 @@ if (descriptors.size() > 0)
     descriptor->clearIsSubscribeToNotification();
 }
 ```
+# Windows Bluetooth Tracing
+
+Windows Bluetooth tracing requires the download of a WPRP file from the Microsoft Git hub repo [eere](https://github.com/microsoft/busiotools/tree/master/bluetooth/tracing). The readme.md document in the Microsoft Git hub repo describes the steps to enable the tracing.
+
+When this tracing is complete the stop command will write the trace contents to an ETL file that is provided as a parameter to the command.
+
+The generated ETL file is a binary file in order to parse it to a readable form, a tool called BTETLParse.exe is required to convert the ETL. The tool supports a number of different formats of output, namely:
+
+- CFA
+    - Can be opened with Teledyne LeCroy Wireless Protocol Suite 
+- HCI
+    - This is a plain text file
+- PCAP
+    - This can be opened with wireshark
+
+Instructions for the BTETLParse.exe tool can be found [Here](https://docs.microsoft.com/en-us/windows-hardware/drivers/bluetooth/testing-btp-tools-btetlparse)
+
+The BTETLParse.exe tool can be downloaded from [Here](https://docs.microsoft.com/en-us/windows-hardware/drivers/bluetooth/testing-btp-software-package)
 
 ## 编译
 
@@ -71,3 +89,4 @@ if (descriptors.size() > 0)
 ### MSYS2 Mingw32/Mingw64
 
 使用CMake编译,需要使用最新版的MSYS2。由于MSYS2的gcc暂时不支持BLE(截至编辑时)，故从Windows10 SDK中复制了相应的库及头文件。
+
