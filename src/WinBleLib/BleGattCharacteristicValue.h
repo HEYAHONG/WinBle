@@ -27,7 +27,7 @@ SOFTWARE.
 #define BLEGATTCHARACTERISTICVALUE_H
 
 #include <Windows.h>
-#include <bluetoothleapis.h>
+#include "bluetoothleapis.h"
 
 /// <summary>
 /// Represents a bluetooth low energy characteristic value read from a device

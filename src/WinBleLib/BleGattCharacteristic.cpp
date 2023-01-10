@@ -53,7 +53,7 @@ PBTH_LE_GATT_DESCRIPTOR BleGattCharacteristic::getGattDescriptors(HANDLE hBleDev
 		{
 			Utility::throwHResultException("Unable to determine the number of gatt descriptors.", hr);
 		}
-		
+
 		if (expectedDescriptorBufferCount > 0)
 		{
 			pDescriptorBuffer = (PBTH_LE_GATT_DESCRIPTOR)
@@ -107,7 +107,7 @@ VOID WINAPI BleGattCharacteristic::NotificationCallback(BTH_LE_GATT_EVENT_TYPE, 
 	// has completed
 
 	CallbackScope callScope(*callbackContext);
-	
+
 	if (pEvent->ChangedAttributeHandle == callbackContext->getGattCharacteristic()->AttributeHandle)
 	{
 		auto notification = new BleGattNotificationData(pEvent->CharacteristicValue);
@@ -211,7 +211,7 @@ void BleGattCharacteristic::registerNotificationHandler(function<void(BleGattNot
 
 		HandleWrapper hBleService(
 			openBleInterfaceHandle(
-				mapServiceUUID(&_pGattService->ServiceUuid), 
+				mapServiceUUID(&_pGattService->ServiceUuid),
 				GENERIC_READ | GENERIC_WRITE));
 
 		HRESULT hr = BluetoothGATTRegisterEvent(hBleService.get(), CharacteristicValueChangedEvent,
@@ -235,7 +235,7 @@ void BleGattCharacteristic::unregisterNotificationHandler()
 		HRESULT hr = BluetoothGATTUnregisterEvent(_eventHandle, BLUETOOTH_GATT_FLAG_NONE);
 
 		// Waits until the last invocation of the callback has completed
-		
+
 		_callbackContext.Unregister();
 
 		if (S_OK != hr)
@@ -245,12 +245,12 @@ void BleGattCharacteristic::unregisterNotificationHandler()
 	}
 }
 
-BleGattCharacteristicValue BleGattCharacteristic::getValue()
+BleGattCharacteristicValue BleGattCharacteristic::getValue(bool forceDirectRead)
 {
 	PBTH_LE_GATT_CHARACTERISTIC_VALUE pCharValueBuffer = nullptr;
 	USHORT charValueDataSize = 0;
 
-	if (_pGattCharacteristic->IsReadable) 
+	if (_pGattCharacteristic->IsReadable)
 	{
 		HandleWrapper hBleService(
 			openBleInterfaceHandle(mapServiceUUID(&_pGattService->ServiceUuid),
@@ -262,20 +262,20 @@ BleGattCharacteristicValue BleGattCharacteristic::getValue()
 			0,
 			nullptr,
 			&charValueDataSize,
-			BLUETOOTH_GATT_FLAG_NONE);
+			forceDirectRead?BLUETOOTH_GATT_FLAG_FORCE_READ_FROM_DEVICE:BLUETOOTH_GATT_FLAG_NONE);
 
-		if (HRESULT_FROM_WIN32(ERROR_MORE_DATA) != hr) 
+		if (HRESULT_FROM_WIN32(ERROR_MORE_DATA) != hr)
 		{
 			Utility::throwHResultException("Unable to determine the characteristic value size.", hr);
 		}
 
 		pCharValueBuffer = (PBTH_LE_GATT_CHARACTERISTIC_VALUE)malloc(charValueDataSize);
 
-		if (pCharValueBuffer == nullptr) 
+		if (pCharValueBuffer == nullptr)
 		{
 			Utility::handleMallocFailure(charValueDataSize);
 		}
-		else 
+		else
 		{
 			RtlZeroMemory(pCharValueBuffer, charValueDataSize);
 		}
@@ -286,7 +286,7 @@ BleGattCharacteristicValue BleGattCharacteristic::getValue()
 			(ULONG)charValueDataSize,
 			pCharValueBuffer,
 			nullptr,
-			BLUETOOTH_GATT_FLAG_NONE);
+			forceDirectRead?BLUETOOTH_GATT_FLAG_FORCE_READ_FROM_DEVICE:BLUETOOTH_GATT_FLAG_NONE);
 
 		if (S_OK != hr)
 		{
@@ -301,7 +301,7 @@ BleGattCharacteristicValue BleGattCharacteristic::getValue()
 	return BleGattCharacteristicValue(pCharValueBuffer);
 }
 
-void BleGattCharacteristic::setValue(UCHAR const * data, ULONG size)
+void BleGattCharacteristic::setValue(UCHAR const * data, ULONG size,bool writeWithoutResponse)
 {
 	if (_pGattCharacteristic->IsSignedWritable || _pGattCharacteristic->IsWritable || _pGattCharacteristic->IsWritableWithoutResponse)
 	{
@@ -320,7 +320,7 @@ void BleGattCharacteristic::setValue(UCHAR const * data, ULONG size)
 				openBleInterfaceHandle(mapServiceUUID(&_pGattService->ServiceUuid),
 					GENERIC_WRITE));
 
-			HRESULT hr = BluetoothGATTSetCharacteristicValue(hBleService.get(), _pGattCharacteristic, gatt_value, NULL, BLUETOOTH_GATT_FLAG_NONE);
+			HRESULT hr = BluetoothGATTSetCharacteristicValue(hBleService.get(), _pGattCharacteristic, gatt_value,(BTH_LE_GATT_RELIABLE_WRITE_CONTEXT)NULL, writeWithoutResponse?BLUETOOTH_GATT_FLAG_WRITE_WITHOUT_RESPONSE :BLUETOOTH_GATT_FLAG_NONE);
 
 			free(gatt_value);
 

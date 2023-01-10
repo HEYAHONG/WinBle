@@ -27,7 +27,7 @@ SOFTWARE.
 #define BLEGATTCHARACTERISTIC_H
 
 #include <Windows.h>
-#include <bluetoothleapis.h>
+#include "bluetoothleapis.h"
 
 #include "CallbackContext.h"
 #include "BleGattDescriptor.h"
@@ -55,13 +55,14 @@ class BleGattCharacteristic
 		BleDeviceContext& _bleDeviceContext;
 
 		BLUETOOTH_GATT_EVENT_HANDLE _eventHandle;
-		
+
 		list<shared_ptr<BleGattDescriptor>> _bleGattDescriptors;
+
 
 		PBTH_LE_GATT_DESCRIPTOR _pGattDescriptors = nullptr;
 
 		PBTH_LE_GATT_CHARACTERISTIC _pGattCharacteristic;
-		
+
 		/// <summary>
 		/// Get the list of gatt descriptors <see cref="PBTH_LE_GATT_DESCRIPTOR"/>
 		/// </summary>
@@ -80,7 +81,7 @@ class BleGattCharacteristic
 		/// <param name="context">The context passed to the call back</param>
 		/// <returns></returns>
 		static VOID WINAPI NotificationCallback(BTH_LE_GATT_EVENT_TYPE eventType, PVOID eventOutParameter, PVOID context);
-		
+
 	public:
 		/// <summary>
 		/// Constructs an instance of a <see cref="BleGattCharacteristic"/>
@@ -89,7 +90,7 @@ class BleGattCharacteristic
 		/// <param name="hBleService">The Gatt service handle</parma>
 		/// <param name="pGattCharacteristic">The contained <see cref="PBTH_LE_GATT_CHARACTERISTIC"/></param>
 		explicit BleGattCharacteristic(BleDeviceContext &bleDeviceContext, PBTH_LE_GATT_SERVICE pGattService, PBTH_LE_GATT_CHARACTERISTIC pGattCharacteristic);
-		
+
 		~BleGattCharacteristic();
 
 		/// <summary>
@@ -106,12 +107,12 @@ class BleGattCharacteristic
 		/// Gets the characteristics attribute handle
 		/// </summary>
 		USHORT getAttributeHandle() const;
-		
+
 		/// <summary>
 		/// Gets the characteristics value handle
 		/// </summary>
 		USHORT getCharacteristicValueHandle() const;
-		
+
 		/// <summary>
 		/// Indicates if a characteristic is broadcast-able
 		/// </summary>
@@ -169,14 +170,16 @@ class BleGattCharacteristic
 		/// <summary>
 		/// Reads a characteristics value
 		/// </summary>
+		/// <param name="forceDirectRead">force driect read from device</param>
 		/// <remarks>Throws a BleException if the characteristic is not readable</remarks>
-		BleGattCharacteristicValue getValue();
+		BleGattCharacteristicValue getValue(bool forceDirectRead=false);
 
 		/// <summary>
 		/// Writes a characteristics value
 		/// </summary>
+		/// <param name="writeWithoutResponse">write without response</param>
 		/// <remarks>Throws a BleException if the characteristic is not writable</remarks>
-		void setValue(UCHAR const * data, ULONG size);
+		void setValue(UCHAR const * data, ULONG size,bool writeWithoutResponse=false);
 
 		/// <summary>
 		/// Enumerate this characteristics list of ble descriptors

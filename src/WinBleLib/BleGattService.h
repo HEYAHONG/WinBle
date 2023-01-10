@@ -27,7 +27,7 @@ SOFTWARE.
 #define BLEGATTSERVICE_H
 
 #include <Windows.h>
-#include <bluetoothleapis.h>
+#include "bluetoothleapis.h"
 
 #include <list>
 
